@@ -25,6 +25,8 @@ public class Pawn extends AbstractPiece {
             int twoStep = direction * 2;
             addMoveVerticallyIfAllowed(from, twoStep, board, movesAllowed);
         }
+        addDiagonalMoveIfAllowed(from, direction, direction, board, movesAllowed);
+        addDiagonalMoveIfAllowed(from, direction, -direction, board, movesAllowed);
         return movesAllowed;
     }
 
@@ -36,19 +38,48 @@ public class Pawn extends AbstractPiece {
         }
     }
 
+    private boolean isOpponent(Coordinates coords, Board board) {
+        if (Pawn.this.colour.equals(board.get(coords).getColour())) {
+            return false ;
+        }
+        return true;
+    }
+    private void addDiagonalMoveIfAllowed(Coordinates from, int rowDiffDirection, int colDiffDirection,
+                                          Board board, ArrayList movesAllowed){
+        boolean isEmpty;
+        boolean isInBoard;
+        boolean isOpponent;
+        Coordinates newCoordinates;
+        newCoordinates =  from.plus(rowDiffDirection, colDiffDirection);
+        isInBoard = isWithinBoardBoundary(newCoordinates);
+        //check square available
+        if (isInBoard) {
+            isEmpty = isSquareEmpty(newCoordinates, board);
+            if (!isEmpty) {
+                isOpponent = isOpponent(newCoordinates, board);
+                if (isOpponent) {
+                    movesAllowed.add(new Move(from, newCoordinates));
+                }
+            }
+        }
+    }
+
+
+
+
     private void addMoveVerticallyIfAllowed(Coordinates from, int rowDiffDirection,
-                                   Board board, ArrayList movesAllowed) {
+                                            Board board, ArrayList movesAllowed) {
         int colDiff = 0;
         boolean isEmpty;
         boolean isInBoard;
         Coordinates newCoordinates;
         newCoordinates =  from.plus(rowDiffDirection , colDiff);
-        // check coordonne within the board
+        // check coordinates within the board
         isInBoard = isWithinBoardBoundary(newCoordinates);
         //check square available
         if (isInBoard) {
             isEmpty = isSquareEmpty(newCoordinates, board);
-            if (isEmpty && isInBoard) {
+            if (isEmpty) {
                 movesAllowed.add(new Move(from, newCoordinates));
             }
         }
