@@ -15,7 +15,7 @@ public class King extends AbstractPiece {
 
     @Override
     public List<Move> getAllowedMoves(Coordinates from, Board board) {
-
+        ArrayList movesAllowed = new ArrayList<>();
         for (int col = -1; col <= 1; col++) {
             for (int row = -1; row <= 1; row++) {
                 boolean isEmpty;
@@ -24,16 +24,24 @@ public class King extends AbstractPiece {
                 Coordinates newCoordinates;
                 newCoordinates =  from.plus(row, col);
                 isInBoard = isWithinBoardBoundary(newCoordinates);
-                System.out.println(row);
+                if (isInBoard) {
+                    isEmpty = isSquareEmpty(newCoordinates, board);
+                    isOpponent = isOpponent(newCoordinates, board);
+                    if (isEmpty || isOpponent) {
+                        movesAllowed.add(new Move(from, newCoordinates));
+                    }
+                }
             }
         }
-
-
-
-        return new ArrayList<>();
+        return movesAllowed;
     }
 
-
+    private boolean isOpponent(Coordinates coords, Board board) {
+        if (King.this.colour.equals(board.get(coords).getColour())) {
+            return false ;
+        }
+        return true;
+    }
 
     private boolean isWithinBoardBoundary(Coordinates coords) {
         // should in board instance
