@@ -18,8 +18,7 @@ public class Pawn extends AbstractPiece {
     public List<Move> getAllowedMoves(Coordinates from, Board board) {
         ArrayList movesAllowed = new ArrayList<>();
         int direction = setMoveDirection();
-        boolean isEmpty1;
-        // add
+        // add one step move
         addMoveVerticallyIfAllowed(from, direction, board, movesAllowed);
         // if first move and can perform one step move then check for 2 step move
         if (Pawn.this.isFirstMove && !movesAllowed.isEmpty()) {
@@ -28,7 +27,6 @@ public class Pawn extends AbstractPiece {
         }
         return movesAllowed;
     }
-
 
     private int setMoveDirection() {
         if (Pawn.this.colour.equals(PlayerColour.WHITE)) {
@@ -42,13 +40,33 @@ public class Pawn extends AbstractPiece {
                                    Board board, ArrayList movesAllowed) {
         int colDiff = 0;
         boolean isEmpty;
+        boolean isInBoard;
         Coordinates newCoordinates;
         newCoordinates =  from.plus(rowDiffDirection , colDiff);
+        // check coordonne within the board
+        isInBoard = isWithinBoardBoundary(newCoordinates);
         //check square available
-        isEmpty = isSquareEmpty(newCoordinates, board);
-        if (isEmpty) {
-            movesAllowed.add(new Move(from, newCoordinates));
+        if (isInBoard) {
+            isEmpty = isSquareEmpty(newCoordinates, board);
+            if (isEmpty && isInBoard) {
+                movesAllowed.add(new Move(from, newCoordinates));
+            }
         }
+    }
+
+    private boolean isWithinBoardBoundary(Coordinates coords) {
+        // should in board instance
+        final int rowLimitTop = 0;
+        final int rowLimitBottom = 7;
+        final int colLimitLeft = 0;
+        final int colLimitRight = 7;
+        int row = coords.getRow();
+        int col = coords.getCol();
+        //boolean isWithinBoard;
+        if (0 <= row && row <= 7 && 0 <= col && col <= 7) {
+            return true;
+        }
+        return false;
     }
 
     private boolean isSquareEmpty(Coordinates coords, Board board){
