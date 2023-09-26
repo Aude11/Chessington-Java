@@ -2,6 +2,9 @@ package chessington.model;
 
 import chessington.model.pieces.*;
 
+import java.util.List;
+import java.util.Objects;
+
 public class Board {
 
     private Piece[][] board = new Piece[8][8];
@@ -42,6 +45,8 @@ public class Board {
     }
 
     public void move(Coordinates from, Coordinates to) {
+        Piece pieceToUpdateFirstMoveStatus = board[from.getRow()][from.getCol()];
+        pieceToUpdateFirstMoveStatus.setFirstMoveStatus();
         board[to.getRow()][to.getCol()] = board[from.getRow()][from.getCol()];
         board[from.getRow()][from.getCol()] = null;
     }
