@@ -9,8 +9,7 @@ public class Board {
 
     private Piece[][] board = new Piece[8][8];
 
-    private Board() {
-    }
+    private Board() {}
 
     public static Board forNewGame() {
         Board board = new Board();
@@ -54,4 +53,7 @@ public class Board {
     public void placePiece(Coordinates coords, Piece piece) {
         board[coords.getRow()][coords.getCol()] = piece;
     }
+
+
 }
+

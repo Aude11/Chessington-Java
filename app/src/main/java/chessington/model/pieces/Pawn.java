@@ -87,10 +87,6 @@ public class Pawn extends AbstractPiece {
 
     private boolean isWithinBoardBoundary(Coordinates coords) {
         // should in board instance
-        final int rowLimitTop = 0;
-        final int rowLimitBottom = 7;
-        final int colLimitLeft = 0;
-        final int colLimitRight = 7;
         int row = coords.getRow();
         int col = coords.getCol();
         //boolean isWithinBoard;
