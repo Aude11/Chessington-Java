@@ -7,7 +7,6 @@ import chessington.model.PlayerColour;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Pawn extends AbstractPiece {
 
@@ -18,63 +17,42 @@ public class Pawn extends AbstractPiece {
     @Override
     public List<Move> getAllowedMoves(Coordinates from, Board board) {
         ArrayList movesAllowed = new ArrayList<>();
-        int colDiff = 0;
-        int oneStep = 1;
-        int oneStepWithDirection = setMoveDirection(oneStep); // can refactor
-        boolean isEmpty;
+        int direction = setMoveDirection();
         boolean isEmpty1;
-        Move moveOneSquare = getAMove(from, colDiff, oneStepWithDirection);
-        Coordinates to1;
-        to1 =  from.plus(oneStepWithDirection, colDiff);
-        isEmpty1 = isSquareEmpty(to1, board);
-        if (isEmpty1) {
-            movesAllowed.add(moveOneSquare);
-        }
-        //movesAllowed.add(moveOneSquare);
-        if (Pawn.this.isFirstMove && isEmpty1) {
-            int twoStep = 2;
-            int twoStepWithDirection = setMoveDirection(twoStep);
-            Move move2Square = getAMove(from, colDiff, twoStepWithDirection);
-            Coordinates to;
-            Coordinates squareToAsset;
-            to =  from.plus(twoStepWithDirection, colDiff);
-            isEmpty = isSquareEmpty(to, board);
-            if (isEmpty) {
-                movesAllowed.add(move2Square);
-            }
-
+        // add
+        addMoveVerticallyIfAllowed(from, direction, board, movesAllowed);
+        // if first move and can perform one step move then check for 2 step move
+        if (Pawn.this.isFirstMove && !movesAllowed.isEmpty()) {
+            int twoStep = direction * 2;
+            addMoveVerticallyIfAllowed(from, twoStep, board, movesAllowed);
         }
         return movesAllowed;
     }
 
-    private Move getAMove (Coordinates from, int colDiff, int rowDiff) {
-        Coordinates newCoordinates;
-        newCoordinates =  from.plus(rowDiff, colDiff); // move up for white pawn
-        return new Move(from, newCoordinates);
-    }
 
-    private int setMoveDirection(int step) {
+    private int setMoveDirection() {
         if (Pawn.this.colour.equals(PlayerColour.WHITE)) {
-            int stepDown;
-            stepDown = -step;
-            return stepDown;
+            return -1 ;
         } else {
-            return step;
+            return 1;
         }
     }
 
-    /*private Move moveOneSquare(Coordinates from, int rowDiffDirection) {
-        //check square available
+    private void addMoveVerticallyIfAllowed(Coordinates from, int rowDiffDirection,
+                                   Board board, ArrayList movesAllowed) {
         int colDiff = 0;
-        return new Move(from, newCoordinates());
+        boolean isEmpty;
+        Coordinates newCoordinates;
+        newCoordinates =  from.plus(rowDiffDirection , colDiff);
+        //check square available
+        isEmpty = isSquareEmpty(newCoordinates, board);
+        if (isEmpty) {
+            movesAllowed.add(new Move(from, newCoordinates));
+        }
     }
 
-    private Move moveTwoSquare(Coordinates from, int rowDiff) {
-
-    }
-*/
-    private boolean isSquareEmpty(Coordinates to, Board board){
-        if (board.get(to) != null) {
+    private boolean isSquareEmpty(Coordinates coords, Board board){
+        if (board.get(coords) != null) {
             return false;
         }
         return true;
